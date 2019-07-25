@@ -16,8 +16,14 @@ IP4ADDR=$(curl -s --show-error $PUBLIC_IP4_LOOKUP_SERVICE | grep -o "[0-9]\{1,3\
 IP6ADDR=$(ip -6 addr | awk '{print $2}' | grep -P '^(?!fd)^(?!fe80)^(?!fc)[[:alnum:]]{4}:.*/64' | cut -d '/' -f1 | head -1 | tr -d '\n')
 
 # get old ip addresses if available 
-. "$IPCACHEv4" 2> /dev/null
-. "$IPCACHEv6" 2> /dev/null
+if [ -f "$IPCACHEv6" ]
+then
+        . "$IPCACHEv6"
+fi
+if [ -f "$IPCACHEv4" ]
+then
+        . "$IPCACHEv4"
+fi
 
 # check if current unicast ipv6 address is available
 if [ "$IP6ADDR" = "" ]
